@@ -1,12 +1,16 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:profile/common/app_alerts.dart';
 import 'package:profile/features/auth/view/register.dart';
+import 'package:profile/features/profile/view/profile_screen.dart';
 
 import '../../../common/app_colors.dart';
 import '../../../common/app_font.dart';
+import '../../../common/app_keys.dart';
 import '../../../common/custom_buttom.dart';
 import '../../../common/custom_decoration.dart';
 import '../../../common/navigation.dart';
+import '../../../common/storage_manager.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
@@ -19,6 +23,20 @@ class _SignInScreenState extends State<SignInScreen> {
   TextEditingController _emailOrPhone = TextEditingController();
   TextEditingController _password = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  @override
+  void initState() {
+    showItme();
+    super.initState();
+  }
+
+  showItme() async {
+    var box = await StorageManager.instance.openHiveBox();
+    var email = box.get(AppKeys.email);
+    var password = box.get(AppKeys.password);
+    print("object $email");
+    print("psa $password");
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -98,9 +116,18 @@ class _SignInScreenState extends State<SignInScreen> {
                 ),
                 CustomButton(
                   text: "Sign In",
-                  onTap: () {
+                  onTap: () async {
                     if (_formKey.currentState!.validate()) {
-
+                      var box = await StorageManager.instance.openHiveBox();
+                      var email = box.get(AppKeys.email);
+                      var password = box.get(AppKeys.password);
+                      if (email == _emailOrPhone.text &&
+                          password == _password.text) {
+                        navigate(context: context, screen: ProfileScreen());
+                      } else {
+                        AppAlerts.showScaffoldDialog(
+                            context, "Email or Password is In Correct");
+                      }
                     }
                   },
                   height: size * 0.13,
