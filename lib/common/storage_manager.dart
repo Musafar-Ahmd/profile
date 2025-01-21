@@ -17,18 +17,31 @@ class StorageManager {
     return Hive.openBox(AppKeys.box);
   }
 
-  Future<void> saveToken(String value) async {
+  Future<void> saveEmail(String value) async {
     final box = await openHiveBox();
-    await box.put(AppKeys.token, value);
+    await box.put(AppKeys.email, value);
+  }
+
+  Future<void> savePassword(String value) async {
+    final box = await openHiveBox();
+    await box.put(AppKeys.password, value);
+  }
+
+  Future<void> saveName(String value) async {
+    final box = await openHiveBox();
+    await box.put(AppKeys.name, value);
   }
 
   Future<void> clearData() async {
     final box = await openHiveBox();
-    await box.delete(AppKeys.token);
+    await box.delete(AppKeys.email);
+    await box.delete(AppKeys.phone);
+    await box.delete(AppKeys.password);
+    await box.delete(AppKeys.name);
   }
 
-  Future<void> saveUserId(int value) async {
+  Future<void> savePhone(String value) async {
     final box = await openHiveBox();
-    await box.put(AppKeys.userId, value);
+    await box.put(AppKeys.phone, value);
   }
 }

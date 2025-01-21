@@ -1,12 +1,18 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:profile/common/app_alerts.dart';
+import 'package:profile/common/extension.dart';
 import 'package:profile/features/auth/view/register.dart';
-
+import 'package:profile/features/profile/view/profile_screen.dart';
 import '../../../common/app_colors.dart';
 import '../../../common/app_font.dart';
+import '../../../common/app_keys.dart';
 import '../../../common/custom_buttom.dart';
 import '../../../common/custom_decoration.dart';
 import '../../../common/navigation.dart';
+import '../../../common/storage_manager.dart';
+import '../../../common/app_strings.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
@@ -16,7 +22,7 @@ class SignInScreen extends StatefulWidget {
 }
 
 class _SignInScreenState extends State<SignInScreen> {
-  TextEditingController _emailOrPhone = TextEditingController();
+  TextEditingController _email = TextEditingController();
   TextEditingController _password = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -36,7 +42,7 @@ class _SignInScreenState extends State<SignInScreen> {
               children: [
                 Center(
                   child: Text(
-                    "Let’s sign you in",
+                    AppStrings.signInTitle,
                     style: normalFont(
                         size * 0.07, FontWeight.w600, AppColors.black),
                   ),
@@ -45,15 +51,18 @@ class _SignInScreenState extends State<SignInScreen> {
                   height: size * 0.19,
                 ),
                 Text(
-                  "Email or Phone number",
+                  AppStrings.emailLabel,
                   style: normalFont(
                       size * 0.05, FontWeight.w500, AppColors.textGrey),
                 ),
                 TextFormField(
-                  controller: _emailOrPhone,
+                  controller: _email,
                   validator: (v) {
                     if (v!.isEmpty) {
-                      return "Email or Phone Can't be Empty";
+                      return AppStrings.emailEmptyError;
+                    }
+                    if (!v.isValidEmail()) {
+                      return AppStrings.enterValidEmail;
                     }
                   },
                   decoration: customInputNoBorder(
@@ -64,14 +73,14 @@ class _SignInScreenState extends State<SignInScreen> {
                   height: size * 0.1,
                 ),
                 Text(
-                  "Password",
+                  AppStrings.passwordLabel,
                   style: normalFont(
                       size * 0.05, FontWeight.w500, AppColors.textGrey),
                 ),
                 TextFormField(
                   validator: (v) {
                     if (v!.isEmpty) {
-                      return "Password Can't be Empty";
+                      return AppStrings.passwordEmptyError;
                     }
                   },
                   controller: _password,
@@ -86,7 +95,7 @@ class _SignInScreenState extends State<SignInScreen> {
                     GestureDetector(
                       onTap: () {},
                       child: Text(
-                        "Forgot Password?",
+                        AppStrings.forgotPasswordText,
                         style: normalFont(
                             size * 0.035, FontWeight.w500, AppColors.black),
                       ),
@@ -97,10 +106,26 @@ class _SignInScreenState extends State<SignInScreen> {
                   height: size * 0.15,
                 ),
                 CustomButton(
-                  text: "Sign In",
-                  onTap: () {
+                  text: AppStrings.signInButtonText,
+                  onTap: () async {
                     if (_formKey.currentState!.validate()) {
-
+                      EasyLoading.show();
+                      var box = await StorageManager.instance.openHiveBox();
+                      var email = box.get(AppKeys.email);
+                      var password = box.get(AppKeys.password);
+                      if (email == _email.text && password == _password.text) {
+                        EasyLoading.dismiss();
+                        AppAlerts.showScaffoldDialog(
+                            context, AppStrings.loginSuccessfulMessage);
+                        navigate(
+                            context: context,
+                            screen: ProfileScreen(),
+                            type: NavigationType.pushAndRemoveUntil);
+                      } else {
+                        EasyLoading.dismiss();
+                        AppAlerts.showScaffoldDialog(
+                            context, AppStrings.incorrectCredentialsMessage);
+                      }
                     }
                   },
                   height: size * 0.13,
@@ -112,7 +137,7 @@ class _SignInScreenState extends State<SignInScreen> {
                 ),
                 Center(
                   child: Text(
-                    "Or",
+                    AppStrings.orText,
                     style: normalFont(16, FontWeight.w500, AppColors.black),
                   ),
                 ),
@@ -124,7 +149,7 @@ class _SignInScreenState extends State<SignInScreen> {
                     text: TextSpan(
                       children: [
                         const TextSpan(
-                          text: "Don't have an account? ",
+                          text: AppStrings.noAccountText,
                           style: TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.w500,
@@ -132,7 +157,7 @@ class _SignInScreenState extends State<SignInScreen> {
                           ),
                         ),
                         TextSpan(
-                          text: "Register",
+                          text: AppStrings.registerText,
                           style: normalFont(
                             15,
                             FontWeight.w400,
