@@ -1,5 +1,8 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:profile/common/extension.dart';
 import 'package:profile/common/storage_manager.dart';
 import '../../../common/app_colors.dart';
 import '../../../common/app_font.dart';
@@ -7,6 +10,7 @@ import '../../../common/custom_buttom.dart';
 import '../../../common/custom_decoration.dart';
 import '../../../common/navigation.dart';
 import 'login.dart';
+import '../../../common/app_strings.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -40,54 +44,60 @@ class _SignUpScreenState extends State<SignUpScreen> {
               children: [
                 Center(
                   child: Text(
-                    "Let’s sign you up",
+                    AppStrings.signUpTitle,
                     style: normalFont(
                         size * 0.07, FontWeight.w600, AppColors.black),
                   ),
                 ),
                 SizedBox(height: size * 0.1),
-                _buildLabel("Name", size),
+                _buildLabel(AppStrings.nameLabel, size),
                 TextFormField(
                   controller: _name,
                   validator: (v) {
                     if (v == null || v.isEmpty) {
-                      return "Name can't be empty";
+                      return AppStrings.nameEmptyError;
                     }
                     return null;
                   },
                   decoration: customInputNoBorder(color: Colors.grey),
                 ),
                 SizedBox(height: size * 0.05),
-                _buildLabel("Email", size),
+                _buildLabel(AppStrings.emailLabelSignUp, size),
                 TextFormField(
                   controller: _email,
                   validator: (v) {
                     if (v == null || v.isEmpty) {
-                      return "Email can't be empty";
+                      return AppStrings.emailEmptyError;
+                    }
+                    if (!v.isValidEmail()) {
+                      return AppStrings.enterValidEmail;
                     }
                     return null;
                   },
                   decoration: customInputNoBorder(color: Colors.grey),
                 ),
                 SizedBox(height: size * 0.05),
-                _buildLabel("Phone Number", size),
+                _buildLabel(AppStrings.phoneLabel, size),
                 TextFormField(
+                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                  keyboardType: TextInputType.number,
+                  maxLength: 10,
                   controller: _phone,
                   validator: (v) {
                     if (v == null || v.isEmpty) {
-                      return "Phone can't be empty";
+                      return AppStrings.phoneEmptyError;
                     }
                     return null;
                   },
                   decoration: customInputNoBorder(color: Colors.grey),
                 ),
                 SizedBox(height: size * 0.05),
-                _buildLabel("Password", size),
+                _buildLabel(AppStrings.passwordLabelSignUp, size),
                 TextFormField(
                   controller: _password,
                   validator: (v) {
                     if (v == null || v.isEmpty) {
-                      return "Password can't be empty";
+                      return AppStrings.passwordEmptyError;
                     }
                     return null;
                   },
@@ -95,16 +105,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ),
                 SizedBox(height: size * 0.2),
                 CustomButton(
-                  text: "Sign Up",
+                  text: AppStrings.signUpButtonText,
                   fontSize: size * 0.045,
                   onTap: () async {
                     if (_formKey.currentState!.validate()) {
+                      EasyLoading.show();
                       StorageManager.instance.saveEmail(_email.text);
                       StorageManager.instance.savePassword(_password.text);
                       StorageManager.instance.saveName(_name.text);
                       StorageManager.instance.savePhone(_phone.text);
-
-                      navigate(context: context, screen: SignInScreen());
+                      EasyLoading.dismiss();
+                      navigate(context: context, screen: const SignInScreen());
                     }
                   },
                   height: size * 0.11,
@@ -117,7 +128,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     text: TextSpan(
                       children: [
                         const TextSpan(
-                          text: "Do you have an account? ",
+                          text: AppStrings.haveAccountText,
                           style: TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.w500,
@@ -125,7 +136,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           ),
                         ),
                         TextSpan(
-                          text: "Sign In",
+                          text: AppStrings.signInText,
                           style: normalFont(
                             15,
                             FontWeight.w400,
@@ -134,7 +145,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           recognizer: TapGestureRecognizer()
                             ..onTap = () {
                               navigate(
-                                  context: context, screen: SignUpScreen());
+                                  context: context, screen: const SignInScreen());
                             },
                         ),
                       ],

@@ -35,11 +35,9 @@ class StorageManager {
   Future<void> clearData() async {
     final box = await openHiveBox();
     await box.delete(AppKeys.email);
-  }
-
-  Future<void> saveUserId(int value) async {
-    final box = await openHiveBox();
-    await box.put(AppKeys.userId, value);
+    await box.delete(AppKeys.phone);
+    await box.delete(AppKeys.password);
+    await box.delete(AppKeys.name);
   }
 
   Future<void> savePhone(String value) async {

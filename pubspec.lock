@@ -2,7 +2,7 @@
 # See https://dart.dev/tools/pub/glossary#lockfile
 packages:
   animate_do:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: animate_do
       sha256: "7a3162729f0ea042f9dd84da217c5bde5472ad9cef644079929d4304a5dc4ca0"
@@ -87,7 +87,7 @@ packages:
     source: sdk
     version: "0.0.0"
   flutter_easyloading:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: flutter_easyloading
       sha256: ba21a3c883544e582f9cc455a4a0907556714e1e9cf0eababfcb600da191d17c
@@ -116,7 +116,7 @@ packages:
     source: sdk
     version: "0.0.0"
   google_fonts:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: google_fonts
       sha256: b1ac0fe2832c9cc95e5e88b57d627c5e68c223b9657f4b96e1487aa9098c7b82
@@ -132,7 +132,7 @@ packages:
     source: hosted
     version: "2.2.3"
   hive_flutter:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: hive_flutter
       sha256: dca1da446b1d808a51689fb5d0c6c9510c0a2ba01e22805d492c73b68e33eecc

@@ -35,3 +35,39 @@ InputDecoration customInputNoBorder(
       isDense: isDense,
       counterText: "");
 }
+
+
+InputDecoration customInputDecoration(
+    {Icon? suffixIcon,
+      Icon? prefixIcon,
+      bool isDense = false,
+      required Color color,
+      String? hintText,
+      String? labelText,
+      double? fontSize,
+      double? borderRadius}) {
+  return InputDecoration(
+      labelText: labelText,
+      hintStyle: TextStyle(color: AppColors.black, fontSize: fontSize),
+      hintText: hintText,
+      border: OutlineInputBorder(
+        borderSide: BorderSide(color: color, width: 1.0),
+        borderRadius: BorderRadius.circular(borderRadius ?? 6),
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: color, width: 1.0),
+        borderRadius: BorderRadius.circular(borderRadius ?? 6),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: color, width: 1.0),
+        borderRadius: BorderRadius.circular(borderRadius ?? 6),
+      ),
+      disabledBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: color, width: 1.0),
+        borderRadius: BorderRadius.circular(borderRadius ?? 6),
+      ),
+      suffixIcon: suffixIcon,
+      prefixIcon: prefixIcon,
+      isDense: isDense,
+      counterText: "");
+}
